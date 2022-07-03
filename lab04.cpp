@@ -9,6 +9,12 @@
 #include <string>
 #include "histogram.h"
 using namespace std;
+struct Input 
+{
+    vector<double> numbers;
+    size_t bin_count;
+};
+
 vector<double>
 input_numbers(istream& in, size_t count)
 {
@@ -19,6 +25,22 @@ input_numbers(istream& in, size_t count)
     return result;
 }
 
+Input
+read_input(istream& in) {
+    Input data;
+
+    cerr << "Enter number count: ";
+    size_t number_count;
+    in >> number_count;
+
+    cerr << "Enter numbers: ";
+    data.numbers = input_numbers(in, number_count);
+
+    cerr << "Enter bin count: ";
+    in >> data.bin_count;
+
+    return data;
+}
 void make_histogram(size_t& bin_count, size_t& number_count, const vector<double>& numbers, vector <size_t>& bins, double& min, double& max)
 {
     double bin_size = (max - min) / bin_count;
@@ -91,14 +113,9 @@ void show_histogram_text(vector<size_t>& bins, size_t& bin_count, size_t& number
 int main()
 {
     // ввод
-    size_t number_count;
-    cerr << "Enter number count: ";
-    cin >> number_count;
-    cerr << "Enter numbers: " << endl;
+    size_t bin_count = 0; size_t number_count = 0;
+    read_input(cin);
     const auto numbers = input_numbers(cin, number_count);
-    size_t bin_count;
-    cerr << "Enter bin count: ";
-    cin >> bin_count;
     // расчет гистограммы
     vector <size_t> bins(bin_count, 0);
     double min;
