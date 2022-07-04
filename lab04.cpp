@@ -96,7 +96,7 @@ void show_histogram_text(vector<size_t>& bins, size_t& bin_count, size_t& number
         cout << endl;
     }
 }
-int main()
+int main(int argc, char* argv[])
 {
     curl_global_init(CURL_GLOBAL_ALL);
     string color = " ";
