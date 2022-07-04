@@ -98,12 +98,15 @@ void show_histogram_text(vector<size_t>& bins, size_t& bin_count, size_t& number
 }
 int main(int argc, char* argv[])
 {
-    curl_global_init(CURL_GLOBAL_ALL);
-    string color = " ";
-    const auto input = read_input(cin, true); 
-    const auto bins = make_histogram(input);
-    show_histogram_svg(bins, color);
-    return 0;
+    if (argc > 1) 
+    {
+        curl_global_init(CURL_GLOBAL_ALL);
+        string color = " ";
+        const auto input = read_input(cin, true);
+        const auto bins = make_histogram(input);
+        show_histogram_svg(bins, color);
+        return 0;
+    }
 }
 
 
