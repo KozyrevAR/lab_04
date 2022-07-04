@@ -1,13 +1,8 @@
 ﻿// lab04.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 
-
-#include <iostream>
-#include <math.h>
-#include <conio.h>
-#include <vector>
-#include <string>
 #include "histogram.h"
+#include <curl/curl.h>
 using namespace std;
 struct Input 
 {
@@ -103,10 +98,11 @@ void show_histogram_text(vector<size_t>& bins, size_t& bin_count, size_t& number
 }
 int main()
 {
+    curl_global_init(CURL_GLOBAL_ALL);
     string color = " ";
     const auto input = read_input(cin, true); 
     const auto bins = make_histogram(input);
-    
+    show_histogram_svg(bins, color);
     return 0;
 }
 
