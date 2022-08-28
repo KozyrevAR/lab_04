@@ -41,26 +41,23 @@ svg_text(double left, double baseline, string text)
 }
 // функция из д.з.
 void
-svg_color(vector<size_t>& bins, size_t number_count, size_t bin_count, string& color)
+svg_color(size_t bin, size_t number_count, size_t bin_count, string& color)
 {
     size_t sr_bin = 0;
     sr_bin = number_count / bin_count;
-    for (size_t bin : bins)
-    {
-        if (bin > sr_bin)
-            color = "red";
-        else if (bin <= sr_bin)
-            color = "green";
-    }
+    if (bin > sr_bin)
+        color = "red";
+    else
+        color = "green";
 }
-void svg_rect(string& color, double x, double y, double width, double height, string stroke = "black", string fill = "black")
+void svg_rect(string& color, double x, double y, double width, double height, string stroke = "black", string obv = "black")
 {
     stroke = color;
-    fill = color;
-    cout << "<rect x='" << x << "' y='" << y << "' width='" << width << "' height='" << height << "' stroke='" << stroke << "' fill='" << fill << "'/>";
+    obv = color;
+    cout << "<rect x='" << x << "' y='" << y << "' width='" << width << "' height='" << height << "' stroke='" << stroke << "' fill='" << obv << "'/>";
 }
 void
-show_histogram_svg(const vector<size_t>& bins, string& color) {
+show_histogram_svg(const vector<size_t>& bins, size_t numcount, size_t bincount, string& color) {
     const auto IMAGE_WIDTH = 400;
     const auto IMAGE_HEIGHT = 300;
     const auto TEXT_LEFT = 20;
@@ -70,10 +67,11 @@ show_histogram_svg(const vector<size_t>& bins, string& color) {
     const auto BLOCK_WIDTH = 10;
     double top = 0;
     svg_begin(IMAGE_WIDTH, IMAGE_HEIGHT);
-    for (size_t bin : bins) {
+    for (size_t bin : bins)
+    {
         const double bin_width = BLOCK_WIDTH * bin;
         svg_text(TEXT_LEFT, top + TEXT_BASELINE, to_string(bin));
-
+        svg_color(bin, numcount, bincount, color);
         svg_rect(color, TEXT_WIDTH, top, bin_width, BIN_HEIGHT);
         top += BIN_HEIGHT;
     }
