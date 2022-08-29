@@ -4,6 +4,11 @@
 #include <conio.h>
 #include <iostream>
 #include <string>
+#include <windows.h>
+#include <tchar.h>
+#include <stdio.h>
+#include <curl/curl.h>
+#include <sstream>
 using namespace std;
 void find_minmax(const vector<double>& numbers, double& min, double& max);
 void svg_begin(double width, double height);

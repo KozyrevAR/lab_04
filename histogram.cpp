@@ -1,4 +1,5 @@
 #include "histogram.h"
+
 void find_minmax(const vector<double>& numbers, double& min, double& max)
 {
     if (numbers.size() == 0)
@@ -54,8 +55,41 @@ void svg_rect(string& color, double x, double y, double width, double height, st
 {
     stroke = color;
     obv = color;
-    cout << "<rect x='" << x << "' y='" << y << "' width='" << width << "' height='" << height << "' stroke='" << stroke << "' fill='" << obv << "'/>";
+    cout << "<rect x='" << x << "' y='" << y << "' width='" << width << "' height='" << height << "' stroke='" << stroke << "' fill='" << obv << "'/>" << endl;
 }
+string
+make_info_text(double TEXT_LEFT, double IMAGE_HEIGHT, double TEXT_BASELINE)
+{
+    DWORD WINAPI GetVersion(void);
+    stringstream buffer;
+    const auto info = GetVersion();
+    //printf("Version (10) = %10x\n", info);
+    //printf("Version (16) = %16x\n", info);
+    DWORD mask = 0b00000000'00000000'11111111'11111111;
+    DWORD version = info & mask;
+    //printf("Version = %lu\n", version);
+    DWORD platform = info >> 16;
+    //printf("Platform = %lu\n", platform);
+    DWORD mask2 = 0b00000000'11111111;
+    DWORD version_major = version & mask2;
+    //printf("Version_major = %lu\n", version_major);
+    DWORD version_minor = version >> 8;
+    //printf("Version_minor = %lu\n", version_minor);
+    DWORD build;
+    if ((info & 0x80000000) == 0)
+    {
+        build = platform;
+        //printf("Build = %lu\n", build);
+
+    }
+    buffer << "Windows " << "v" << version_major << "." << version_minor << " (build " << build << ")";
+    TCHAR  infoBuf[MAX_COMPUTERNAME_LENGTH+1];
+    DWORD bufCharCount = MAX_COMPUTERNAME_LENGTH+1;
+    GetComputerNameA( LPSTR (infoBuf), &bufCharCount );
+    buffer << "<tspan x='" << TEXT_LEFT << "' y='" << IMAGE_HEIGHT - TEXT_BASELINE <<" '> "<< "Computer name: " << infoBuf << "</tspan>";
+    return buffer.str();
+}
+
 void
 show_histogram_svg(const vector<size_t>& bins, size_t numcount, size_t bincount, string& color) {
     const auto IMAGE_WIDTH = 400;
@@ -75,7 +109,10 @@ show_histogram_svg(const vector<size_t>& bins, size_t numcount, size_t bincount,
         svg_rect(color, TEXT_WIDTH, top, bin_width, BIN_HEIGHT);
         top += BIN_HEIGHT;
     }
-    svg_text(TEXT_LEFT, TEXT_BASELINE, to_string(bins[0]));
+    //svg_text(TEXT_LEFT, IMAGE_HEIGHT - TEXT_BASELINE + 30, to_string(bins[0]));
+
+    svg_text(TEXT_LEFT, IMAGE_HEIGHT - TEXT_BASELINE - 30, make_info_text(TEXT_LEFT, IMAGE_HEIGHT, TEXT_BASELINE));
+
     svg_end();
 
 }
