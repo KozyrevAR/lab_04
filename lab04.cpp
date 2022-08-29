@@ -1,9 +1,8 @@
-﻿// lab04.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
+﻿
 #include "histogram.h"
 #include <curl/curl.h>
 #include <sstream>
+#include <windows.h>
 using namespace std;
 struct Input
 {
@@ -15,7 +14,7 @@ struct progress
     char* privat;
     size_t size;
 };
-
+DWORD WINAPI GetVersion(void);
 static size_t progress_callback(void* clientp,
     double dltotal,
     double dlnow,
@@ -35,7 +34,6 @@ input_numbers(istream& in, size_t count)
     }
     return result;
 }
-
 Input
 read_input(istream& in, bool prompt) {
     Input data;
@@ -163,6 +161,30 @@ download(const string& address)
 }
 int main(int argc, char* argv[])
 {
+
+    const auto info = GetVersion();
+    printf("Version (10) = %10x\n", info);
+    printf("Version (16) = %16x\n", info);
+    DWORD mask = 0b00000000'00000000'11111111'11111111;
+    DWORD version = info & mask;
+    printf("Version = %lu\n", version);
+    DWORD platform = info >> 16;
+    printf("Platform = %lu\n", platform);
+    DWORD mask2 = 0b00000000'11111111;
+    DWORD version_major = version & mask2;
+    printf("Version_major = %lu\n", version_major);
+    DWORD version_minor = version >> 8;
+    printf("Version_minor = %lu\n", version_minor);
+    DWORD build;
+    if ((info & 0x80000000) == 0)
+    {
+        build = platform;
+        printf("Build = %lu\n", build);
+
+    }
+    cerr << "Windows" << " " << "v" << " " << version_major << "." << version_minor << " " << "(build" << " " << build << ")";
+    return 0;
+
     Input input;
     curl_global_init(CURL_GLOBAL_ALL);
     if (argc > 1)
@@ -177,16 +199,3 @@ int main(int argc, char* argv[])
     const auto bins = make_histogram(input);
     show_histogram_svg(bins, input.numbers.size(), input.bin_count, color);
 }
-
-
-
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
