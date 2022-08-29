@@ -3,6 +3,8 @@
 #include <curl/curl.h>
 #include <sstream>
 #include <windows.h>
+#include <tchar.h>
+#include <stdio.h>
 using namespace std;
 struct Input
 {
@@ -159,6 +161,7 @@ download(const string& address)
     }
     return read_input(buffer, false);
 }
+
 int main(int argc, char* argv[])
 {
 
@@ -183,6 +186,12 @@ int main(int argc, char* argv[])
 
     }
     cerr << "Windows" << " " << "v" << " " << version_major << "." << version_minor << " " << "(build" << " " << build << ")";
+
+    TCHAR  infoBuf[MAX_COMPUTERNAME_LENGTH+1];
+    DWORD bufCharCount = MAX_COMPUTERNAME_LENGTH+1;
+    GetComputerNameA( LPSTR (infoBuf), &bufCharCount );
+
+    printf( TEXT("\nComputer name:      %s"), infoBuf );
     return 0;
 
     Input input;
