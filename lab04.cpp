@@ -1,10 +1,7 @@
 ﻿
 #include "histogram.h"
-#include <curl/curl.h>
-#include <sstream>
-#include <windows.h>
-#include <tchar.h>
-#include <stdio.h>
+
+
 using namespace std;
 struct Input
 {
@@ -16,7 +13,7 @@ struct progress
     char* privat;
     size_t size;
 };
-DWORD WINAPI GetVersion(void);
+
 static size_t progress_callback(void* clientp,
     double dltotal,
     double dlnow,
@@ -164,36 +161,6 @@ download(const string& address)
 
 int main(int argc, char* argv[])
 {
-
-    const auto info = GetVersion();
-    printf("Version (10) = %10x\n", info);
-    printf("Version (16) = %16x\n", info);
-    DWORD mask = 0b00000000'00000000'11111111'11111111;
-    DWORD version = info & mask;
-    printf("Version = %lu\n", version);
-    DWORD platform = info >> 16;
-    printf("Platform = %lu\n", platform);
-    DWORD mask2 = 0b00000000'11111111;
-    DWORD version_major = version & mask2;
-    printf("Version_major = %lu\n", version_major);
-    DWORD version_minor = version >> 8;
-    printf("Version_minor = %lu\n", version_minor);
-    DWORD build;
-    if ((info & 0x80000000) == 0)
-    {
-        build = platform;
-        printf("Build = %lu\n", build);
-
-    }
-    cerr << "Windows" << " " << "v" << " " << version_major << "." << version_minor << " " << "(build" << " " << build << ")";
-
-    TCHAR  infoBuf[MAX_COMPUTERNAME_LENGTH+1];
-    DWORD bufCharCount = MAX_COMPUTERNAME_LENGTH+1;
-    GetComputerNameA( LPSTR (infoBuf), &bufCharCount );
-
-    printf( TEXT("\nComputer name:      %s"), infoBuf );
-    return 0;
-
     Input input;
     curl_global_init(CURL_GLOBAL_ALL);
     if (argc > 1)
